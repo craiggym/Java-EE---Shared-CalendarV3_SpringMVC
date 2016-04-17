@@ -6,7 +6,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <!DOCTYPE HTML>
-<%@ page import="com.Calendar.RegisterServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -16,38 +15,66 @@
     <h1>Sign up while it's free!</h1>
     <br/>
     <br/>
-    <form action="register" method="POST">
+    <form:form method="POST" action="register" modelAttribute="user">
         <fieldset>
+
             <legend><em>Personal Information</em></legend><br/>
-            <label for="username">Username *: </label><span> <input type="text" id="username" name="username"></span>
-            <% HttpSession reg = request.getSession();%>
-            <%-- In the case the username is empty --%>
-            <%  if(reg.getAttribute("unameEmpty") == "true") %>
-            <span style="color: darkred;font-style: italic"><strong>Username cannot be empty!!</strong></span>
-            <%-- In the case the username is not unique --%>
-            <%if(reg.getAttribute("duplicate") == "true")%>
-            <span style="color: darkred;font-style: italic"><strong>That username is already taken!</strong></span>
+            <label path=""> Username *: </label>
+            <form:input path="username"></form:input>
+
+            <%-- In the case the username is blank --%>
+            <c:if test="${unameEmpty == \"true\"}">
+                <span style="color: darkred;font-style: italic"><strong>Username cannot be empty!</strong></span>
+            </c:if>
+                <%-- In the case the username is not unique --%>
+            <c:if test="${duplicate == \"true\"}">
+                <span style="color: darkred;font-style: italic"><strong>That username is already taken!</strong></span>
+            </c:if>
+
             <br/><br/>
-            <label for="pass">Password *: </label> <span> <input type="password" id="pass" name="pass"></span>
-            <%-- In the case the passwords aren't matching --%>
-            <%  if(reg.getAttribute("passMatch") == "false") %>
-            <span style="color: darkred;font-style: italic"><strong>Passwords must match!</strong></span>
-            <%-- In the case the passwords are empty --%>
-            <%  if(reg.getAttribute("passBlank") == "true") %>
-            <span style="color: darkred;font-style: italic"><strong>Passwords cannot be empty!!</strong></span>
+            <label path="password">Password *: </label>
+            <form:password path="password"></form:password>
+
+                <%-- In the case the passwords aren't matching --%>
+            <c:choose>
+            <c:when test="${passMatch == \"false\"}">
+                <span style="color: darkred;font-style: italic"><strong>Passwords must match!</strong></span>
+            </c:when>
+                <%-- In the case the passwords are empty --%>
+            <c:when test="${passEmpty == \"true\"}">
+                <span style="color: darkred;font-style: italic"><strong>Password cannot be empty!</strong></span>
+            </c:when>
+            <c:otherwise></c:otherwise></c:choose>
             <br/><br/>
-            <label for="pass2">Password (again)*: </label> <span> <input type="password" id="pass2" name="pass2"></span>
+            <label path="password2">Password (repeat)*: </label>
+            <form:password path="password2"></form:password>
+
+            <c:if test="${pass2Empty == \"true\"}">
+                <span style="color: darkred;font-style: italic"><strong>Password cannot be empty!</strong></span>
+            </c:if>
+
             <br/><br/>
-            <label for="e_mail">E-mail: </label> <span> <input type="email" id="e_mail" name="e_mail"></span>
+            <label path="e_mail">E-mail: </label>
+            <form:input type="email" path="e_mail"/>
+
             <br/><br/>
-            <label for="fname">First name *: </label><span> <input type="text" id="fname" name="fname"></span>
-            <%  if(reg.getAttribute("nameEmpty") == "true") %>
-            <span style="color: darkred;font-style: italic"><strong>First name cannot be empty!</strong></span>
+            <label path="first_name">First name *: </label>
+            <form:input path="first_name"/>
+                <%-- In the case the fname is empty --%>
+            <c:if test="${fnameEmpty == \"true\"}">
+                <span style="color: darkred;font-style: italic"><strong>Must include first name!</strong></span>
+            </c:if>
+
             <br/><br/>
-            <label for="lname">Last name: </label> <span> <input type="text" id="lname" name="lname"></span>
-                <br/><br/>
-                <input type="submit" value="Submit">
+            <label path="last_name">Last name *: </label>
+            <form:input path="last_name"/>
+            <c:if test="${lnameEmpty == \"true\"}">
+                <span style="color: darkred;font-style: italic"><strong>Must include last name!</strong></span>
+            </c:if>
+
+            <br/><br/>
+            <input type="submit" value="Submit">
         </fieldset>
-    </form>
+    </form:form>
 </body>
 </html>

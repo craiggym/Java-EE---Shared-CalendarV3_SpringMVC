@@ -78,6 +78,25 @@ public class UserDaoImpl implements UserDao{
             return false;
         }
     }
+    // count update//
+    /*****************************************************************************************
+     * countUser
+     * @return count of users in user table
+     ****************************************************************************************/
+    @Override
+    public int countUsers() {
+        try {
+            String query = "SELECT COUNT(*) FROM User";
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            int res = (int) jdbcTemplate.queryForObject(query, int.class);
+
+            return res;
+        }
+        catch(Exception e){
+            if (debug) System.out.println("error querying for count");
+            return 0;
+        }
+    }
 
     /*****************************************************************************************
      * isAuthCorrect

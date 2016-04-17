@@ -11,7 +11,7 @@
     <title>Registration Successful</title>
 </head>
 <body>
-    <h1>Congratulations <%= request.getParameter("fname")%></h1>
+    <h1>Congratulations ${fname}</h1>
     <h2>You have successfully registered!</h2>
     <a href="home">Click here to log in!</a>
 </body>
