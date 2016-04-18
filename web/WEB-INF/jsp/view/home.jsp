@@ -55,14 +55,16 @@
                 Event: <c:out value="${event.eventName}"></c:out> <br/>
                 Date: <c:out value="${event.eventDate}"></c:out> <br/>
                 Description: <c:out value="${event.eventDescription}"></c:out> <br/>
-                Creator: <c:out value="${event.eventAuthor}"></c:out> <br/>
+                Creator: <c:out value="${event.eventAuthor}"></c:out> <br/><br/>
 
-                <c:if test="${event.eventAuthor != username}"/>
+                <c:set var="eName" scope="session" value="${event.eventName}"/>
+                <c:if test="${event.eventAuthor != sessionScope.username && sessionScope.username != null}">
                 <form action="userEvents/likedEvent" method="POST">
                     <input type="hidden" name="it" value="${event.id}"/>
                     <input type="submit" value="Like">
                     <br/>
                 </form>
+                </c:if>
             </c:forEach>
         </c:when>
     </c:choose>

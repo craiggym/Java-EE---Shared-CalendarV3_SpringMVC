@@ -21,11 +21,11 @@
         <form:input path="eventName"/>
 
         <%-- No null titles --%>
-        <c:if test="${title == \"\"}">
+        <c:if test="${eNameEmpty == \"true\"}">
             <span style="color: darkred;font-style: italic"><strong>Title of event cannot be empty!</strong></span>
         </c:if>
         <%-- No duplicate events --%>
-        <c:if test="${event == \"duplicate\"}">
+        <c:if test="${isDuplicate == \"true\"}">
             <span style="color: darkred;font-style: italic"><strong>Duplicate event!</strong></span>
         </c:if>
 

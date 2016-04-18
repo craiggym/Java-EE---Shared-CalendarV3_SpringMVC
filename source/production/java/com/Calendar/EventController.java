@@ -51,13 +51,16 @@ public class EventController {
             String eventName = event.get(it).getEventName();
             Date eventDate = event.get(it).getEventDate();
             String eventDescription = event.get(it).getEventDescription();
-            String username = event.get(it).getUsername();
+            String username = session.getAttribute("username").toString();
             String author = event.get(it).getEventAuthor();
 
             Event createdNewEvent = new Event(eventID, eventName, eventDate, eventDescription, username, author); // Create event object
 
             EventDao eventDao = (EventDao) context.getBean("eventDao");
-            eventDao.insertEvent(createdNewEvent);
+            // User doesn't have event, proceed with steps
+            if(!eventDao.hasEvent(createdNewEvent.getEventName(), username, createdNewEvent.getEventAuthor())) {
+                eventDao.insertEvent(createdNewEvent);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Database connection could not be established");
