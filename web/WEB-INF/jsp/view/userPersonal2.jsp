@@ -27,51 +27,51 @@
 
 <br/>
 <br/>
+<%-- Display message if the user has no events --%>
+<c:choose>
+    <c:when test="${events == null}">
+        <h3>Not subscribed to any events!</h3>
+        <p><em>Create one or follow one from the Home page!</em>
+        <p></p>
+    </c:when>
+    <c:otherwise> <em style="color: gray;"><strong>Showing events up to 3 months from today </strong></em><br/>
+        <%
+            EventDao eventDao = (EventDao) context.getBean("eventDao");
+            Date todays_date = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH,3);
+            Date beyond_date = cal.getTime();
+            List<Event> events = eventDao.selectAllEvent("${username}");
 
-<% // Display message if the user has no events
-    EventDao eventDao = (EventDao) context.getBean("eventDao");
-    System.out.println(session.getAttribute("username"));
+            for (Event e : events) {
+                int eventId = e.getId();
+                String eventName = e.getEventName();
+                Date eventDate = e.getEventDate();
+                String eventDesc = e.getEventDescription();
+                String eventAuthor = e.getEventAuthor();
+                String eventDateStr = new SimpleDateFormat("MM-dd-yyyy").format(eventDate);
+                if(eventDate.after(todays_date) && eventDate.before(beyond_date)){
+        %>
 
-    Date todays_date = new Date();
-    Calendar cal = Calendar.getInstance();
-    cal.add(Calendar.MONTH,3);
-    Date beyond_date = cal.getTime();
-
-    if (eventDao.eventsExists(session.getAttribute("username").toString()) == false) {%>
-<h3>Not subscribed to any events!</h3>
-<p><em>Create one or follow one from the Home page!</em>
-<p></p>
-<%
-    } else { %> <em style="color: gray;"><strong>Showing events up to 3 months from today </strong></em><br/> <%
-        List<Event> events = eventDao.selectAllEvent(session.getAttribute("username").toString());
-        for (Event e : events) {
-            int eventId = e.getId();
-            String eventName = e.getEventName();
-            Date eventDate = e.getEventDate();
-            String eventDesc = e.getDescription();
-            String eventAuthor = e.getEventAuthor();
-            String eventDateStr = new SimpleDateFormat("MM-dd-yyyy").format(eventDate);
-            if(eventDate.after(todays_date) && eventDate.before(beyond_date)){
-%>
-
-                Event Id: <%= eventId %> <br/>
-                Event: <%= eventName %> <br/>
-                Date: <%= eventDateStr %> <br/>
-                Description: <%= eventDesc %> <br/>
-                Creator: <%= eventAuthor %> <br/><br/>
-<%}
+        Event Id: <%= eventId %> <br/>
+        Event: <%= eventName %> <br/>
+        Date: <%= eventDateStr %> <br/>
+        Description: <%= eventDesc %> <br/>
+        Creator: <%= eventAuthor %> <br/><br/>
+        <%}
         }
-    }
-%>
-
+        %>
+    </c:otherwise>
+</c:choose>
 <br />
 
 <br/>
 
-<form action="event?action=create" method="POST">
+<form action="userEvents/add" method="GET">
+    <input type="hidden" value="${username}"/>
     <input type="submit" value="Create Event"><br/>
 </form>
-<form action="home?action=logout" method="POST">
+<form action="logout" method="POST">
     <input type="submit" value="Log out"><br/>
 </form>
 

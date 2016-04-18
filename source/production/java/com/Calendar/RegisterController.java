@@ -6,6 +6,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +32,7 @@ public class RegisterController {
 
      ***********************************************************************/
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute("user") User user, Map<String,String> model)
+    public String addUser(@ModelAttribute("user") User user, BindingResult result, Map<String,String> model)
     {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("AppContext.xml"); // New AppContext pointing to xml config
         UserDao userDao = (UserDao) context.getBean("userDao");

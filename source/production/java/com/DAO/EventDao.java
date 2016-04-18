@@ -8,8 +8,9 @@ public interface EventDao {
     void createEventTable();
     void dropEventTable();
     boolean eventsExists(String username);
+    int countEvents();
     boolean eventsExists();
-    boolean hasEvent(String eventname, String username);
+    boolean hasEvent(String eventname, String username, String creator);
     List<Event> selectAllEvent(String username);
     List<Event> selectAllEvents();
 }

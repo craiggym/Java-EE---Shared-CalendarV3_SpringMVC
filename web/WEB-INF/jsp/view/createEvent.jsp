@@ -13,19 +13,24 @@
 <h1></h1>
 <br/>
 <br/>
-<form action="event?action=add_event" method="POST">
+<form:form action="userEvents/submit" method="POST" modelAttribute="event">
     <fieldset>
         <legend><em>Event Details</em></legend><br/>
-        <label>Event name: </label><span> <input type="text" name="eventName"></span>
+        <label>Event name: </label><span>
+        <form:input path="eventName"/>
+
         <%-- No null titles --%>
-        <% if(session.getAttribute("titleEmpty").toString() == "true") %>
-        <span style="color: darkred;font-style: italic"><strong>Title of event cannot be empty!</strong></span>
-        <%--No duplicate titles --%>
-        <% if(session.getAttribute("titleDuplicate").toString() == "true") %>
-        <span style="color: darkred;font-style: italic"><strong>You're following an event with this name!</strong></span>
+        <c:if test="${title == \"\"}">
+            <span style="color: darkred;font-style: italic"><strong>Title of event cannot be empty!</strong></span>
+        </c:if>
+        <%-- No duplicate events --%>
+        <c:if test="${event == \"duplicate\"}">
+            <span style="color: darkred;font-style: italic"><strong>Duplicate event!</strong></span>
+        </c:if>
+
         <br/><br/>
         <label>Event Date: </label>
-        <select name="month">
+        <form:select path="month">
             <option value="_01">jan</option>
             <option value="_02">feb</option>
             <option value="_03">mar</option>
@@ -38,8 +43,8 @@
             <option value="_10">oct</option>
             <option value="_11">nov</option>
             <option value="_12">dec</option>
-        </select>
-        <select name="date">
+        </form:select>
+        <select path="day">
             <option value="_01">01</option>
             <option value="_02">02</option>
             <option value="_03">03</option>
@@ -72,7 +77,7 @@
             <option value="_30">30</option>
             <option value="_31">31</option>
         </select>
-        <select name="year">
+        <form:select path="year">
             <option value="_2016">2016</option>
             <option value="_2017">2017</option>
             <option value="_2018">2018</option>
@@ -88,13 +93,13 @@
             <option value="_2028">2028</option>
             <option value="_2029">2029</option>
             <option value="_2030">2030</option>
-        </select>
+        </form:select>
         <br/><br/>
 
         Event Description:
         <textarea name='Description' id='edescription' style="margin-left: 8px;"></textarea>
         <input type="submit" value="Submit">
     </fieldset>
-</form>
+</form:form>
 </body>
 </html>

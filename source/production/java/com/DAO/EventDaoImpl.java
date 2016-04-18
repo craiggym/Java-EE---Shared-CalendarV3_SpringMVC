@@ -34,7 +34,7 @@ public class EventDaoImpl implements EventDao{
     public void insertEvent(Event event) {
         String query = "INSERT INTO Event (EventID, EventName, EventDate, EventDesc, EventUser, EventCreator) VALUES (?,?,?,?,?,?);";
         jdbcTemplate = new JdbcTemplate(dataSource);
-        Object[] inputs = new Object[] {event.getId(), event.getEventName(), event.getEventDate(), event.getDescription(), event.getUsername(), event.getEventAuthor()};
+        Object[] inputs = new Object[] {event.getId(), event.getEventName(), event.getEventDate(), event.getEventDescription(), event.getUsername(), event.getEventAuthor()};
         jdbcTemplate.update(query,inputs); // 'update' allows for non-static queries whereas execute wouldn't (e.g. '?')
         if(debug) System.out.printf("Added event with name: %s and with user: %s and author: %s", event.getEventName(), event.getUsername(), event.getEventAuthor());
     }
@@ -87,9 +87,9 @@ public class EventDaoImpl implements EventDao{
     }
 
     @Override
-    public boolean hasEvent(String eventname, String username) {
+    public boolean hasEvent(String eventname, String username, String creator) {
         try {
-            String query = "SELECT EventName FROM Event WHERE EventUser='"+username+"' AND EventName='"+eventname+"'";
+            String query = "SELECT EventName FROM Event WHERE EventUser='"+username+"' AND EventName='"+eventname+"' AND EventCreator='"+creator+"'";
             jdbcTemplate = new JdbcTemplate(dataSource);
             String result = (String) jdbcTemplate.queryForObject(query, String.class);
 
@@ -98,6 +98,26 @@ public class EventDaoImpl implements EventDao{
         } catch (Exception e) {
             if (debug) System.out.println("Exception caught in sql query for hasEvent!!");
             return false;
+        }
+    }
+
+    // count update//
+    /*****************************************************************************************
+     * countEvents
+     * @return count of users in user table
+     ****************************************************************************************/
+    @Override
+    public int countEvents() {
+        try {
+            String query = "SELECT COUNT(*) FROM Events";
+            jdbcTemplate = new JdbcTemplate(dataSource);
+            int res = (int) jdbcTemplate.queryForObject(query, int.class);
+
+            return res;
+        }
+        catch(Exception e){
+            if (debug) System.out.println("error querying for count");
+            return 0;
         }
     }
 

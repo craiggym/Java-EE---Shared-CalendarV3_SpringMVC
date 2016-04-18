@@ -1,6 +1,6 @@
 <%@ page import="java.util.*" %>
 <%@ page import="com.Calendar.Event" %>
-<%@ page import="com.Calendar.EventServlet" %>
+<%@ page import="com.Calendar.EventController" %>
 <%@ page import="com.DAO.EventDao" %>
 <%@ page import="org.springframework.context.ConfigurableApplicationContext" %>
 <%@ page import="org.springframework.context.support.ClassPathXmlApplicationContext" %>
@@ -19,7 +19,7 @@
     <body>
     <h1>Home page</h1>
     <form action="drop" method="POST">
-        <input type="submit" value="Drop all data"><br/>
+        <input type="submit" value="Drop all data"  style="border: 3px solid #FF0000;position: fixed; bottom: 0; right: 0"><br/>
     </form>
     <c:choose>
     <c:when test="${username == null}">

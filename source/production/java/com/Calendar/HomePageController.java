@@ -75,7 +75,7 @@ public class HomePageController
 
    /****************************************************************************
     * tableRefresh
-    * Refreshes the table on a redeploy so the data is fresh.
+    * Refreshes the tables in the database
      ***************************************************************************/
    @RequestMapping(value = "drop")
    public String tableRefresh() {
@@ -96,4 +96,12 @@ public class HomePageController
       return "home";
    }
 
+    /****************************************************************************
+     * logout
+     * Logs the user out
+     ***************************************************************************/
+    @RequestMapping(value = "logout")
+    public String logout(){
+        return "logout";
+    }
 }
