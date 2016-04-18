@@ -13,10 +13,11 @@
 <h1></h1>
 <br/>
 <br/>
-<form:form action="userEvents/submit" method="POST" modelAttribute="event">
+<form:form action="add" method="POST" modelAttribute="event">
     <fieldset>
         <legend><em>Event Details</em></legend><br/>
         <label>Event name: </label><span>
+        <form:input path="username" value="${username}" type="hidden"/>
         <form:input path="eventName"/>
 
         <%-- No null titles --%>
@@ -44,7 +45,7 @@
             <option value="_11">nov</option>
             <option value="_12">dec</option>
         </form:select>
-        <select path="day">
+        <form:select path="day">
             <option value="_01">01</option>
             <option value="_02">02</option>
             <option value="_03">03</option>
@@ -76,7 +77,7 @@
             <option value="_29">29</option>
             <option value="_30">30</option>
             <option value="_31">31</option>
-        </select>
+        </form:select>
         <form:select path="year">
             <option value="_2016">2016</option>
             <option value="_2017">2017</option>

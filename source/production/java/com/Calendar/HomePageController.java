@@ -17,7 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 @Controller
@@ -44,10 +47,17 @@ public class HomePageController
     * Views all the events on the home page.
     ***************************************************************************/
    @RequestMapping(value="home", method = RequestMethod.GET)
-    public String viewAllEvents(Map<String,String> model){
+    public String viewAllEvents(Map<String,Object> model, HttpSession session){
 
-    model.put("auth", "null"); // Incorrect auth message doesn't need to be shown
-    return "home";
+       model.put("auth", null); // Incorrect auth message doesn't need to be shown
+       EventDao eventDao = (EventDao) context.getBean("eventDao");
+       List<Event> events = eventDao.selectAllEvents();
+       if(events.size() > 0) {
+           model.put("events", events);
+           session.setAttribute("eventsList", events);
+       }
+       return "home";
+
    }
 
    /****************************************************************************
@@ -55,20 +65,27 @@ public class HomePageController
     * Authorizes and brings user to the user page if login is correct.
     ***************************************************************************/
    @RequestMapping(value="home", method = RequestMethod.POST)
-   public String login(Map<String,String> model, @RequestParam("username") String username,
-                               @RequestParam("password") String password){
+   public String login(Map<String,List> model, @RequestParam("username") String username,
+                               @RequestParam("password") String password, HttpSession session){
      UserDao user = (UserDao) context.getBean("userDao"); // Need to instantiate user data access object for sql query validation
 
       // AUTHENTICATION //
       if(user.isAuthCorrect(username, password)) // authenticate through database
       {
-         model.put("username", username);
-         model.put("first_name", user.selectFirstName(username));
-         return "userPersonal2";
+          session.setAttribute("username", username);
+          return "redirect:/userEvents";
       }
-      else
-         model.put("auth","false"); // Bring back to same page with error
+      else {
+          List<String> notNull = new ArrayList<>();
+          model.put("auth", notNull); // Bring back to same page with error
+      }
 
+       EventDao eventDao = (EventDao) context.getBean("eventDao");
+       List<Event> events = eventDao.selectAllEvents();
+       if(events.size() > 0) {
+           model.put("events", events);
+           session.setAttribute("eventsList", events);
+       }
       return "home";
    }
 
@@ -101,7 +118,8 @@ public class HomePageController
      * Logs the user out
      ***************************************************************************/
     @RequestMapping(value = "logout")
-    public String logout(){
+    public String logout(HttpSession session){
+        session.invalidate();
         return "logout";
     }
 }

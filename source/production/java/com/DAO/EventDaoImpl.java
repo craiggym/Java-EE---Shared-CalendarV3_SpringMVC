@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -109,7 +111,7 @@ public class EventDaoImpl implements EventDao{
     @Override
     public int countEvents() {
         try {
-            String query = "SELECT COUNT(*) FROM Events";
+            String query = "SELECT COUNT(*) FROM Event";
             jdbcTemplate = new JdbcTemplate(dataSource);
             int res = (int) jdbcTemplate.queryForObject(query, int.class);
 
@@ -119,6 +121,20 @@ public class EventDaoImpl implements EventDao{
             if (debug) System.out.println("error querying for count");
             return 0;
         }
+    }
+
+    @Override
+    public List<Event> selectRecentEvent(String username) {
+        Date todays_date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH,3);
+        Date beyond_date = cal.getTime();
+
+        String query = "SELECT EventID, EventName, EventDate, EventDesc, EventUser, EventCreator FROM Event WHERE EventUser='"+username +"' AND EventDate >= " + todays_date + "  ORDER BY EventDate ASC";
+        Object[] input = new Object[]{username};
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        List<Event> events = jdbcTemplate.query(query, new EventMapper());
+        return events;
     }
 
     @Override

@@ -22,30 +22,50 @@
         <input type="submit" value="Drop all data"  style="border: 3px solid #FF0000;position: fixed; bottom: 0; right: 0"><br/>
     </form>
     <c:choose>
-    <c:when test="${username == null}">
-        <h2><a href="register">Link to Register</a></h2>
+        <c:when test="${username == null}">
+            <h2><a href="register">Link to Register</a></h2>
 
-        <c:if test="${auth == \"false\"}">
-            <span style="color: darkred;font-style: italic"><strong>Incorrect username or password!</strong></span>
-        </c:if>
+            <c:if test="${auth != null}">
+                <span style="color: darkred;font-style: italic"><strong>Incorrect username or password!</strong></span>
+            </c:if>
 
 
-    <form action="home" method="POST">
-        Username: <input type="text" name="username"/><br>
-        Password: <input type="password" name="password"/><br>
-        <input type="submit" value="login"/><br><br/>
+            <form action="home" method="POST">
+            Username: <input type="text" name="username"/><br>
+            Password: <input type="password" name="password"/><br>
+            <input type="submit" value="login"/><br><br/>
         </c:when>
         <c:otherwise>
-        <form action="welcome" method="POST">
-            <input type="submit" Value="User Page">
-        </form>
-        <form action="home?action=logout" method="POST">
-            <input type="submit" value="Log out"><br/>
-        </form>
-    </form>
+            <form action="userEvents" method="POST">
+                <input type="submit" Value="User Page">
+            </form>
+            <form action="logout" method="POST">
+                <input type="submit" value="Log out"><br/><br/>
+            </form>
+            </form>
 
         </c:otherwise>
-        </c:choose>
+    </c:choose>
+
+    <c:choose>
+        <c:when test="${events != null}">
+            <em style="color: gray;"><strong>Showing All Events</strong></em><br/>
+            <c:forEach var="event" items="${events}">
+                Event Id: <c:out value="${event.id}"></c:out> <br/>
+                Event: <c:out value="${event.eventName}"></c:out> <br/>
+                Date: <c:out value="${event.eventDate}"></c:out> <br/>
+                Description: <c:out value="${event.eventDescription}"></c:out> <br/>
+                Creator: <c:out value="${event.eventAuthor}"></c:out> <br/>
+
+                <c:if test="${event.eventAuthor != username}"/>
+                <form action="userEvents/likedEvent" method="POST">
+                    <input type="hidden" name="it" value="${event.id}"/>
+                    <input type="submit" value="Like">
+                    <br/>
+                </form>
+            </c:forEach>
+        </c:when>
+    </c:choose>
     </body>
 
 </html>

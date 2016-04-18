@@ -23,7 +23,7 @@
 <body>
 
 
-<h1>Welcome <c:out value="${first_name}"></c:out></h1>
+<h1>Welcome <%= session.getAttribute("username") %></h1>
 
 <br/>
 <br/>
@@ -35,51 +35,28 @@
         <p></p>
     </c:when>
     <c:otherwise> <em style="color: gray;"><strong>Showing events up to 3 months from today </strong></em><br/>
-        <%
-            EventDao eventDao = (EventDao) context.getBean("eventDao");
-            Date todays_date = new Date();
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MONTH,3);
-            Date beyond_date = cal.getTime();
-            List<Event> events = eventDao.selectAllEvent("${username}");
-
-            for (Event e : events) {
-                int eventId = e.getId();
-                String eventName = e.getEventName();
-                Date eventDate = e.getEventDate();
-                String eventDesc = e.getEventDescription();
-                String eventAuthor = e.getEventAuthor();
-                String eventDateStr = new SimpleDateFormat("MM-dd-yyyy").format(eventDate);
-                if(eventDate.after(todays_date) && eventDate.before(beyond_date)){
-        %>
-
-        Event Id: <%= eventId %> <br/>
-        Event: <%= eventName %> <br/>
-        Date: <%= eventDateStr %> <br/>
-        Description: <%= eventDesc %> <br/>
-        Creator: <%= eventAuthor %> <br/><br/>
-        <%}
-        }
-        %>
+        <c:forEach var="event" items="${events}">
+            Event Id: <c:out value="${event.id}"></c:out> <br/>
+            Event: <c:out value="${event.eventName}"></c:out> <br/>
+            Date: <c:out value="${event.eventDate}"></c:out> <br/>
+            Description: <c:out value="${event.eventDescription}"></c:out> <br/>
+            Creator: <c:out value="${event.eventAuthor}"></c:out> <br/><br/>
+        </c:forEach>
     </c:otherwise>
 </c:choose>
 <br />
 
 <br/>
-
-<form action="userEvents/add" method="GET">
-    <input type="hidden" value="${username}"/>
+<form:form action="userEvents/add" method="GET">
     <input type="submit" value="Create Event"><br/>
-</form>
+</form:form>
 <form action="logout" method="POST">
     <input type="submit" value="Log out"><br/>
 </form>
-
-<form action="home" method="POST">
+<form action="home" method="GET">
     <input type="submit" value="Home Page">
 </form>
 <br/>
-
 
 </body>
 </html>
