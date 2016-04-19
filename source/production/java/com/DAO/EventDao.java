@@ -14,4 +14,5 @@ public interface EventDao {
     List<Event> selectRecentEvent(String username);
     List<Event> selectAllEvent(String username);
     List<Event> selectAllEvents();
+    Event getEventById(int id);
 }

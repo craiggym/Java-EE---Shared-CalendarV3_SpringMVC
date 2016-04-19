@@ -56,6 +56,14 @@ public class HomePageController
        if(events.size() > 0) {
            model.put("events", events);
            session.setAttribute("eventsList", events);
+           if (session.getAttribute("username") != null) {
+               List<Event> userLikedEvents = eventDao.selectAllEvent(session.getAttribute("username").toString());
+               List<Integer> userEventsId = new ArrayList<Integer>();
+               for (int i = 0; i < userLikedEvents.size(); i++) {
+                   userEventsId.add(userLikedEvents.get(i).getId());
+               }
+               model.put("likedEvents", userEventsId);
+           }
        }
        return "home";
 

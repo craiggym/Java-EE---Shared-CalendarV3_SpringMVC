@@ -7,6 +7,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <% String appContextFile = "WEB-INF/AppContext.xml"; // Use the settings from this xml file %>
 <% ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("AppContext.xml"); %>
@@ -57,9 +58,8 @@
                 Date: <c:out value="${event.eventDate}"></c:out> <br/>
                 Description: <c:out value="${event.eventDescription}"></c:out> <br/>
                 Creator: <c:out value="${event.eventAuthor}"></c:out> <br/>
-
                 <c:set var="eName" scope="session" value="${event.eventName}"/>
-                <c:if test="${event.eventAuthor != sessionScope.username && sessionScope.username != null}">
+                <c:if test="${(event.eventAuthor != sessionScope.username && sessionScope.username != null) && !fn:contains(likedEvents, event.id)}">
                 <form action="userEvents/likedEvent" method="POST">
                     <input type="hidden" name="it" value="${event.id}"/>
                     <input type="submit" value="Like">

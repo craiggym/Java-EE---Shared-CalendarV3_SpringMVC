@@ -56,21 +56,23 @@ public class EventController {
      * Handles the liked events
      ***********************************************************************/
     @RequestMapping(value = "likedEvent")
-    public String likedEvent(HttpSession session, @RequestParam("it") String iterator){
-        int it = Integer.parseInt(iterator); // Parsed from HTML form
+    public String likedEvent(HttpSession session, @RequestParam("it") String it){
+        int id = Integer.parseInt(it); // Parsed from HTML form
+        String username = session.getAttribute("username").toString();
         List<Event> event = (List<Event>) session.getAttribute("eventsList");
-        it--;
+        EventDao eventDao = (EventDao) context.getBean("eventDao");
         try {
-            int eventID = event.get(it).getId();
-            String eventName = event.get(it).getEventName();
-            Date eventDate = event.get(it).getEventDate();
-            String eventDescription = event.get(it).getEventDescription();
-            String username = session.getAttribute("username").toString();
-            String author = event.get(it).getEventAuthor();
+            Event eventSelected = eventDao.getEventById(id);
+            /*
+            int eventID = event.get(id).getId();
+            String eventName = event.get(id).getEventName();
+            Date eventDate = event.get(id).getEventDate();
+            String eventDescription = event.get(id).getEventDescription();
+            String author = event.get(id).getEventAuthor();
+            */
+            Event createdNewEvent = new Event(eventSelected.getId(), eventSelected.getEventName(), eventSelected.getEventDate(), eventSelected.getEventDescription(), username, eventSelected.getEventAuthor()); // Create event object
 
-            Event createdNewEvent = new Event(eventID, eventName, eventDate, eventDescription, username, author); // Create event object
 
-            EventDao eventDao = (EventDao) context.getBean("eventDao");
             // User doesn't have event, proceed with steps
             if(!eventDao.hasEvent(createdNewEvent.getEventName(), username, createdNewEvent.getEventAuthor())) {
                 eventDao.insertEvent(createdNewEvent);

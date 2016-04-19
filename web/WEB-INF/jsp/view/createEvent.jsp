@@ -98,7 +98,7 @@
         <br/><br/>
 
         Event Description:
-        <textarea name='Description' id='edescription' style="margin-left: 8px;"></textarea>
+        <form:textarea path='eventDescription' id='edescription' style="margin-left: 8px;"></form:textarea>
         <input type="submit" value="Submit">
     </fieldset>
 </form:form>

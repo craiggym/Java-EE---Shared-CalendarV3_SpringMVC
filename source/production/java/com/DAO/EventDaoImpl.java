@@ -4,6 +4,7 @@ import com.Calendar.Event;
 import com.Calendar.User;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
@@ -152,5 +153,16 @@ public class EventDaoImpl implements EventDao{
         jdbcTemplate = new JdbcTemplate(dataSource);
         List<Event> events = jdbcTemplate.query(query, new EventMapper());
         return events;
+    }
+
+    @Override
+    public Event getEventById(int id) {
+        String query = "select EventID, EventName, EventDate, EventDesc, EventUser, EventCreator from Event where EventID=" + id + " limit 1";
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        List<Event> events = jdbcTemplate.query(query, new EventMapper());
+        if (events != null && events.size() > 0) {
+            return events.get(0);
+        }
+        return null;
     }
 }
