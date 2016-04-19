@@ -51,11 +51,12 @@
         <c:when test="${events != null}">
             <em style="color: gray;"><strong>Showing All Events</strong></em><br/>
             <c:forEach var="event" items="${events}">
+                <br/>
                 Event Id: <c:out value="${event.id}"></c:out> <br/>
                 Event: <c:out value="${event.eventName}"></c:out> <br/>
                 Date: <c:out value="${event.eventDate}"></c:out> <br/>
                 Description: <c:out value="${event.eventDescription}"></c:out> <br/>
-                Creator: <c:out value="${event.eventAuthor}"></c:out> <br/><br/>
+                Creator: <c:out value="${event.eventAuthor}"></c:out> <br/>
 
                 <c:set var="eName" scope="session" value="${event.eventName}"/>
                 <c:if test="${event.eventAuthor != sessionScope.username && sessionScope.username != null}">

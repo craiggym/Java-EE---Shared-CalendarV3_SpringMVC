@@ -45,7 +45,6 @@ public class EventController {
     public String likedEvent(HttpSession session, @RequestParam("it") String iterator){
         int it = Integer.parseInt(iterator); // Parsed from HTML form
         List<Event> event = (List<Event>) session.getAttribute("eventsList");
-        it--;
         try {
             int eventID = event.get(it).getId();
             String eventName = event.get(it).getEventName();

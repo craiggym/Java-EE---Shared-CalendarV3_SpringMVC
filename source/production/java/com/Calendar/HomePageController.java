@@ -52,6 +52,7 @@ public class HomePageController
        model.put("auth", null); // Incorrect auth message doesn't need to be shown
        EventDao eventDao = (EventDao) context.getBean("eventDao");
        List<Event> events = eventDao.selectAllEvents();
+
        if(events.size() > 0) {
            model.put("events", events);
            session.setAttribute("eventsList", events);

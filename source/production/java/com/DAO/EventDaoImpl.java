@@ -111,7 +111,7 @@ public class EventDaoImpl implements EventDao{
     @Override
     public int countEvents() {
         try {
-            String query = "SELECT COUNT(*) FROM Event";
+            String query = "SELECT MAX(EventID) FROM Event";
             jdbcTemplate = new JdbcTemplate(dataSource);
             int res = (int) jdbcTemplate.queryForObject(query, int.class);
 
