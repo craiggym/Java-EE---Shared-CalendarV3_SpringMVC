@@ -15,7 +15,7 @@ import java.util.*;
 public class EventController {
     private static ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("AppContext.xml");
     private static String username;
-    String userPage = "/userPersonal2";
+    String userPage = "/userPersonal";
 
 
     /************************************************************************
@@ -30,9 +30,23 @@ public class EventController {
         EventDao eventDao = (EventDao) context.getBean("eventDao");
         if (eventDao.eventsExists(session.getAttribute("username").toString()) == false) model.put("events", null);
         else {
-
             List<Event> events = eventDao.selectAllEvent(session.getAttribute("username").toString());
-            model.put("events", events);
+
+            // Logic for recent events //
+            List<Event> recentEvents = new ArrayList<>();
+
+            int iterator = 0;
+            Date todays_date = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH,3);
+            Date beyond_date = cal.getTime();
+            for(Event e:events){
+                Date eventDate = e.getEventDate();
+                if(eventDate.after(todays_date) && eventDate.before(beyond_date))
+                    recentEvents.add(events.get(iterator));
+                iterator++;
+            }
+            model.put("events", recentEvents);
         }
         return userPage;
     }
@@ -45,6 +59,7 @@ public class EventController {
     public String likedEvent(HttpSession session, @RequestParam("it") String iterator){
         int it = Integer.parseInt(iterator); // Parsed from HTML form
         List<Event> event = (List<Event>) session.getAttribute("eventsList");
+        it--;
         try {
             int eventID = event.get(it).getId();
             String eventName = event.get(it).getEventName();
